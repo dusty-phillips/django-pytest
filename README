@@ -1,0 +1,28 @@
+django-pytest
+=============
+
+This project is a simple start on a py.test test runner.
+
+Add it to your python path and add 'pytest' to your installed apps. Create a
+conftest.py in your project directory and include:
+
+from pytest.conftest import pytest_funcarg__client
+
+Now anywhere in your project, you can create files called test_<something>.py.
+These are standard py.test test files. Use the funcarg client to both
+instantiate a test database that is cleared after each test and to provide you
+with a standard django test client. For example:
+
+def test_filter(client):
+    response = client.get('/browse/', {'filter': '1'})
+    assert response.status_code == 200
+
+Use ./manage.py test to run the py.test test runs (ie: it replaces the standard
+django test runner). You can pass some py.test options to the command and they
+will be forwarded to py.test.
+
+The management command has been set up so that syncdb will use the django core
+syncdb, even if south is installed.
+
+I haven't put much effort into this test runner; it suits my current needs, but
+it is rough around the edges.
