@@ -12,6 +12,8 @@ class Command(test.Command):
             help='Tell py.test to filter out tests that don\'t contain keyword'),
         make_option('-s', action='store_false', dest='capture', default=False,
             help='Tell py.test not to capture output. Useful for dropping to ipython shells'),
+        make_option('--pdb', action='store_false', dest='pdb', default=False,
+            help='Start the python debugger on errors'),
     )
     def handle(self, *args, **kwargs):
         # Use syncdb instead of migrate to speed up tests
