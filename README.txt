@@ -8,7 +8,12 @@ To use it, add it to your python path and add *django_pytest* to your installed
 apps. Also set the *TEST_RUNNER = 'django_pytest.test_runner.run_tests'* setting.
 
 Also create a conftest.py in your project directory and include:
-from pytest.conftest import pytest_funcarg__client, pytest_funcarg__django_client
+from django_pytest.conftest import pytest_funcarg__client, pytest_funcarg__django_client
+
+You can also use
+from django_pytest.auth_funcargs import pytest_funcarg__user, pytest_funcarg__groups
+
+to import a user or some groups with users in them
 
 Now anywhere in your project, you can create files called
 *test_<something>.py*.  These are standard py.test test files. Use the funcarg
