@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name="django-pytest",
-        version="0.1.0",
+        version="0.1.1",
         author="Dusty Phillips",
         author_email="dusty@archlinux.ca",
         packages=['django_pytest'],
