@@ -28,7 +28,7 @@ class Command(test.Command):
             if hasattr(settings, "SOUTH_TESTS_MIGRATE") and not settings.SOUTH_TESTS_MIGRATE:
                 management._commands['syncdb'] = 'django.core'
             else:
-                from south.management.commands import SyncDbCommand
+                from south.management.commands.syncdb import Command as SyncDbCommand
                 class MigrateAndSyncCommand(SyncDbCommand):
                     option_list = SyncDbCommand.option_list
                     for opt in option_list:
