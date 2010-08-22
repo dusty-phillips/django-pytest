@@ -12,6 +12,8 @@ class Command(test.Command):
             help='Tell py.test to filter out tests that don\'t contain keyword'),
         make_option('-s', action='store_false', dest='capture', default=False,
             help='Tell py.test not to capture output. Useful for dropping to ipython shells'),
+        make_option('-x', action='store_true', dest='', default=False,
+            help='exit instantly on first error or failed test.'),
         make_option('--pdb', action='store_false', dest='pdb', default=False,
             help='Start the python debugger on errors'),
     )
