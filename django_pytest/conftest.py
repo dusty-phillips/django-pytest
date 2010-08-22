@@ -1,6 +1,5 @@
 import os, sys
 sys.path.append('.')
-sys.path.append('third_party/django-cms-2.0')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from django.conf import settings
 from django.test.client import Client
