@@ -18,7 +18,23 @@ class Command(test.Command):
             help='Start the python debugger on errors'),
     )
     def handle(self, *args, **kwargs):
-        # Use syncdb instead of migrate to speed up tests
         management.get_commands()
-        management._commands['syncdb'] = 'django.core'
+
+        # If south is installed Check if SOUTH_TESTS_MIGRATE is set
+        # if it is, use a sync and migrate paradigm
+        # if it is not set, use the core command
+        # if south is not installed, use default syncdb
+        if "south" in settings.INSTALLED_APPS:
+            if hasattr(settings, "SOUTH_TESTS_MIGRATE") and not settings.SOUTH_TESTS_MIGRATE:
+                management._commands['syncdb'] = 'django.core'
+            else:
+                from south.management.commands import SyncDbCommand
+                class MigrateAndSyncCommand(SyncDbCommand):
+                    option_list = SyncDbCommand.option_list
+                    for opt in option_list:
+                        if "--migrate" == opt.get_opt_string():
+                            opt.default = True
+                            break
+                management._commands['syncdb'] = MigrateAndSyncCommand()
+
         super(Command, self).handle(*args, **kwargs)
