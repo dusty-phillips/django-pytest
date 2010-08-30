@@ -31,8 +31,17 @@ and they will be forwarded to py.test. (Technically, I haven't got it passing
 all options, just the most common ones I use)
 
 The management command has been set up so that syncdb will use the django core
-syncdb, even if south is installed. This prevents migrations from running when
-running unit tests.
+syncdb if SOUTH_TESTS_MIGRATE is set to False, if south is installed. This
+prevents migrations from running when running unit tests. This speeds up test
+setup significantly, but it means your test db may not be identical to
+production, if you have faulty migrations.
+
+py.test automatically picks up any subclasses of unittest.TestCase, provided
+they are in a module named test_<something>.py. Thus, all your existing django
+unittests should work seemlessly with py.test, although you may have to rename
+your test files if they do not conform to this convention. You can also write
+custom py.test test collection hooks to pick up test modules that are named in
+a different directory structure.
 
 This project differs from http://github.com/bfirsh/pytest_django in that it
 provides a django test runner that calls py.test, rather than creating a
