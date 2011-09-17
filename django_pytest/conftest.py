@@ -20,7 +20,8 @@ def pytest_funcarg__django_client(request):
     old_name = settings.DATABASE_NAME
     def setup():
         setup_test_environment()
-        settings.DEBUG = False
+        if not hasattr(settings, 'DEBUG'):
+            settings.DEBUG = False
         if 'south' in settings.INSTALLED_APPS:
             from south.management.commands import patch_for_test_db_setup
             patch_for_test_db_setup()
