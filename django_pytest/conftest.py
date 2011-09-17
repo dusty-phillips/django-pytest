@@ -21,6 +21,9 @@ def pytest_funcarg__django_client(request):
     def setup():
         setup_test_environment()
         settings.DEBUG = False
+        if 'south' in settings.INSTALLED_APPS:
+            from south.management.commands import patch_for_test_db_setup
+            patch_for_test_db_setup()
         from django.db import connection
         connection.creation.create_test_db(1, True)
         return Client()
