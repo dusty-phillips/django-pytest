@@ -17,6 +17,16 @@ class Command(test.Command):
         make_option('--pdb', action='store_false', dest='pdb', default=False,
             help='Start the python debugger on errors'),
     )
+
+    def run_from_argv(self, argv):
+        # Separate Django command options from py.test ones with -- to ensure
+        # that Django is not complaining about unknown options.
+        try:
+            args = argv[:argv.index('--')]
+            super(Command, self).run_from_argv(args)
+        except ValueError:
+            super(Command, self).run_from_argv(argv)
+
     def handle(self, *args, **kwargs):
         management.get_commands()
 
