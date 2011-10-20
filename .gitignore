@@ -3,3 +3,4 @@
 *.swo
 MANIFEST
 dist
+*.egg-info

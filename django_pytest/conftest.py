@@ -1,6 +1,7 @@
 import os, sys
-sys.path.append('.')
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+    sys.path.append('.')
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from django.conf import settings
 from django.test.client import Client
 from django.test.utils import setup_test_environment, teardown_test_environment
