@@ -1,4 +1,5 @@
 import os, sys
+from functools import partial
 if 'DJANGO_SETTINGS_MODULE' not in os.environ:
     sys.path.append('.')
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
@@ -45,15 +46,31 @@ def pytest_funcarg__client(request):
         mail.outbox = []
     return request.cached_setup(setup, teardown, "function")
 
-# Note: I make test usernames and passwords identical for easy login
+def user_creator(name, email, **extra):
+    '''Creates a user.'''
+    # Note: I make test usernames and passwords identical for easy login
+    user = User.objects.create_user(username=name,
+                                    password=name,
+                                    email=email)
+    for attr, value in extra.iteritems():
+        setattr(user, attr, value)
+        user.save()
+    return user
+
 def pytest_funcarg__user(request):
     '''Create a user with no special permissions.'''
-    user = User.objects.create_user(username="user", password="user", email="user@example.com")
-    return user
+    return request.cached_setup(partial(user_creator,
+                                        "user",
+                                        "user@example.com"),
+                                lambda user: user.delete(),
+                                "session")
 
 def pytest_funcarg__admin(request):
     '''Create an admin user with all permissions.'''
-    admin = User.objects.create_user(username="admin", password="admin", email="admin@example.com")
-    admin.is_superuser = True
-    admin.save()
-    return admin
+    return request.cached_setup(partial(user_creator,
+                                        "admin",
+                                        "admin@example.com",
+                                        is_superuser=True,
+                                        is_staff=True),
+                                lambda user: user.delete(),
+                                "session")
