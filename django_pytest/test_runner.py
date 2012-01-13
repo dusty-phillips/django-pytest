@@ -1,18 +1,39 @@
+class TestRunner(object):
+    def __init__(self, verbosity=1, interactive=True, failfast=True, **kwargs):
+        self.verbosity = verbosity
+        self.interactive = interactive
+        self.failfast = failfast
+
+    def run_tests(self, test_labels):
+        import pytest
+        import sys
+
+        if test_labels is None:
+            print ('Not yet implemented: py.test is still not able to '
+                   'discover the tests in all the INSTALLED_APPS as Django '
+                   'requires.')
+            exit(1)
+
+        pytest_args = []
+        if self.failfast:
+            pytest_args.append('--exitfirst')
+        if self.verbosity == 0:
+            pytest_args.append('--quiet')
+        elif self.verbosity > 1:
+            pytest_args.append('--verbose')
+
+        # Remove arguments before (--). This separates Django command options
+        # from py.test ones.
+        try:
+            pytest_args_index = sys.argv.index('--') + 1
+            pytest_args.extend(sys.argv[pytest_args_index:])
+        except ValueError:
+            pass
+
+        sys.exit(pytest.main(pytest_args))
+
+
+# Keep the old name to be backwards-compatible
 def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=[]):
-    import sys
-    from pkg_resources import load_entry_point
-    sys.argv[1:] = sys.argv[2:]
-
-    # Remove stop word (--) from argument list again. This separates Django
-    # command options from py.test ones.
-    try:
-        del sys.argv[sys.argv.index('--')]
-    except ValueError:
-        pass
-
-    try:
-        entry_point = load_entry_point('py>=1.0.0', 'console_scripts', 'py.test')
-    except ImportError:
-        entry_point = load_entry_point('pytest>=2.0', 'console_scripts', 'py.test')
-
-    sys.exit(entry_point())
+    runner = TestRunner(verbosity, interactive, failfast=False)
+    runner.run_tests(test_labels)
