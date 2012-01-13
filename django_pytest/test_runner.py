@@ -4,7 +4,7 @@ class TestRunner(object):
         self.interactive = interactive
         self.failfast = failfast
 
-    def run_tests(self, test_labels):
+    def run_tests(self, test_labels, extra_tests=None):
         import pytest
         import sys
 
@@ -12,6 +12,11 @@ class TestRunner(object):
             print ('Not yet implemented: py.test is still not able to '
                    'discover the tests in all the INSTALLED_APPS as Django '
                    'requires.')
+            exit(1)
+
+        if extra_tests:
+            print ('Not yet implemented: py.test is still not able to '
+                   'run extra_tests as Django requires.')
             exit(1)
 
         pytest_args = []
@@ -34,6 +39,6 @@ class TestRunner(object):
 
 
 # Keep the old name to be backwards-compatible
-def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=[]):
+def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=None):
     runner = TestRunner(verbosity, interactive, failfast=False)
-    runner.run_tests(test_labels)
+    runner.run_tests(test_labels, extra_tests)
