@@ -6,6 +6,9 @@ default test runner.
 
 To use it, add it to your python path and add *django_pytest* to your installed
 apps. Also set the *TEST_RUNNER = 'django_pytest.test_runner.run_tests'* setting.
+If you're using Django 1.3 or newer set
+*TEST_RUNNER = 'django_pytest.test_runner.TestRunner'* or Django will print
+deprecation warnings each time you run your tests.
 
 Also create a conftest.py in your project directory and include:
 from django_pytest.conftest import pytest_funcarg__client, pytest_funcarg__django_client
