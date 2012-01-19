@@ -10,6 +10,6 @@ setup(
         url="http://github.com/buchuki/django-pytest",
         license="LICENSE.txt",
         description="django test runner to use py.test tests",
-        long_description=open('README.txt').read(),
+        long_description=open('README.md').read(),
         zip_safe=False,
 )
